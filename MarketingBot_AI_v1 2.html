@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>MarketingBot AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f6fa;color:#171923}
+.app{max-width:520px;margin:auto;min-height:100vh;background:#fff}
+header{padding:22px 20px;background:linear-gradient(135deg,#111827,#4f46e5);color:#fff}
+.logo{font-size:25px;font-weight:800}.sub{opacity:.85;margin-top:5px;font-size:14px}
+main{padding:18px}.card{background:#fff;border:1px solid #e6e8ef;border-radius:18px;padding:16px;margin-bottom:15px;box-shadow:0 4px 16px rgba(0,0,0,.04)}
+h2{font-size:17px;margin:0 0 13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:12px;font-weight:700;color:#555;display:block;margin:10px 0 6px}
+input,textarea,select{width:100%;border:1px solid #d9dce5;border-radius:12px;padding:12px;font-size:15px;background:#fafbfc}
+textarea{min-height:75px;resize:vertical}.full{grid-column:1/-1}
+.upload{border:2px dashed #cfd3df;border-radius:15px;padding:20px;text-align:center;cursor:pointer;background:#fafbff}
+.upload img{max-width:100%;max-height:210px;border-radius:12px;margin-top:10px;display:none}
+button{border:0;border-radius:13px;padding:14px 16px;font-size:15px;font-weight:800;cursor:pointer}
+.primary{width:100%;background:#4f46e5;color:white}.secondary{background:#eef0ff;color:#3730a3;width:100%;margin-top:10px}
+.result{white-space:pre-wrap;background:#f7f7fb;border-radius:12px;padding:14px;font-size:14px;line-height:1.5}
+.badge{display:inline-block;background:#e9e7ff;color:#4338ca;padding:6px 9px;border-radius:99px;font-size:12px;font-weight:700}
+.hidden{display:none}
+.copy{float:right;padding:7px 10px;font-size:12px;background:#e5e7eb}
+footer{text-align:center;color:#777;font-size:12px;padding:10px 20px 30px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">🤖 MarketingBot AI</div><div class="sub">Ton assistant marketing pour vendre plus facilement</div></header>
+<main>
+<div class="card">
+<h2>📸 Produit</h2>
+<div class="upload" onclick="document.getElementById('photo').click()">
+<strong>Ajouter une photo</strong><br><span style="font-size:12px;color:#777">Appuie ici pour choisir une image</span>
+<img id="preview">
+</div>
+<input id="photo" type="file" accept="image/*" class="hidden">
+</div>
+
+<div class="card">
+<h2>🛍️ Informations</h2>
+<div class="grid">
+<div class="full"><label>Nom du produit</label><input id="name" placeholder="Ex. Chaussure blanche"></div>
+<div><label>Prix (HTG)</label><input id="price" type="number" placeholder="2500"></div>
+<div><label>Quantité</label><input id="qty" placeholder="Ex. 10"></div>
+<div><label>Couleur / modèle</label><input id="color" placeholder="Ex. Blanc"></div>
+<div><label>Tailles</label><input id="sizes" placeholder="Ex. 39-44"></div>
+<div class="full"><label>Promotion</label><input id="promo" placeholder="Ex. Livraison gratuite"></div>
+<div class="full"><label>Contact WhatsApp</label><input id="contact" placeholder="+509 ..."></div>
+<div class="full"><label>Livraison</label><input id="delivery" value="Port-au-Prince"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>🎯 Type de campagne</h2>
+<select id="tone">
+<option>Professionnel et moderne</option>
+<option>Jeune et tendance</option>
+<option>Premium / luxe</option>
+<option>Simple et direct</option>
+</select>
+<br><br>
+<button class="primary" onclick="generate()">✨ Générer ma campagne</button>
+</div>
+
+<div id="outputs" class="hidden">
+<div class="card"><h2>📘 Facebook <button class="copy" onclick="copyText('facebook')">Copier</button></h2><div id="facebook" class="result"></div></div>
+<div class="card"><h2>📸 Instagram <button class="copy" onclick="copyText('instagram')">Copier</button></h2><div id="instagram" class="result"></div></div>
+<div class="card"><h2>🎬 TikTok / Reels <button class="copy" onclick="copyText('tiktok')">Copier</button></h2><div id="tiktok" class="result"></div></div>
+<div class="card"><h2>💬 WhatsApp <button class="copy" onclick="copyText('whatsapp')">Copier</button></h2><div id="whatsapp" class="result"></div></div>
+<div class="card"><h2>🎨 Prompt image IA <button class="copy" onclick="copyText('prompt')">Copier</button></h2><div id="prompt" class="result"></div></div>
+</div>
+</main>
+<footer>MarketingBot AI v1 • Livraison par défaut : Port-au-Prince</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+$('photo').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('preview').src=r.result;$('preview').style.display='block'};r.readAsDataURL(f)};
+function val(id, fallback=''){return $(id).value.trim()||fallback}
+function generate(){
+ const n=val('name','nouveau produit'),p=val('price','Prix à confirmer'),c=val('color',''),s=val('sizes',''),q=val('qty',''),pr=val('promo',''),d=val('delivery','Port-au-Prince'),ct=val('contact',''),tone=val('tone');
+ const details=[c&&'Couleur : '+c,s&&'Tailles : '+s,q&&'Quantité : '+q,pr&&'🎁 '+pr].filter(Boolean).join('\\n');
+ $('facebook').textContent=`🔥 NOUVEAUTÉ — ${n.toUpperCase()}\\n\\nDécouvrez ${n}, avec un style ${tone.toLowerCase()}.\\n${details}\\n\\n💰 Prix : ${p} HTG\\n🚚 Livraison disponible à ${d}.\\n📲 Écrivez-nous maintenant pour commander !\\n${ct?'WhatsApp : '+ct:''}\\n\\n#ModeHaiti #ShoppingHaiti #PortAuPrince #Nouveauté #Haiti`;
+ $('instagram').textContent=`✨ ${n}\\n\\n💰 ${p} HTG\\n🚚 Livraison à ${d}\\n${c?'🎨 '+c+'\\n':''}${s?'📏 Tailles : '+s+'\\n':''}${pr?'🎁 '+pr+'\\n':''}\\n📲 DM pour commander !\\n\\n#Haiti #PortAuPrince #ModeHaiti #ShoppingHaiti`;
+ $('tiktok').textContent=`0–3 s : « 👀 Tu cherches ${n} ? »\\n3–8 s : « Découvre ce modèle au style ${tone.toLowerCase()}. »\\n8–13 s : « ${c?'Disponible en '+c+'.':''} ${s?'Tailles : '+s+'.':''} »\\n13–17 s : « 💰 Seulement ${p} HTG ! »\\n17–20 s : « 🚚 Livraison à ${d}. Écris-nous pour commander ! »`;
+ $('whatsapp').textContent=`🔥 NOUVEAUTÉ !\\n\\n${n}\\n💰 ${p} HTG\\n${c?'🎨 '+c+'\\n':''}${s?'📏 Tailles : '+s+'\\n':''}🚚 Livraison disponible à ${d}.\\n${pr?'🎁 '+pr+'\\n':''}\\n📲 Je veux commander !${ct?'\\nContact : '+ct:''}`;
+ $('prompt').textContent=`Create a high-end professional advertising photo using the uploaded product as the exact reference. Preserve the product exactly: color, shape, proportions, materials, texture, stitching, logos and every visible detail. Do not redesign it. Place it in a luxurious modern retail environment with realistic studio lighting and shadows. Photorealistic product photography, vertical 4:5, optimized for Facebook and Instagram. Leave clean space for text: "${n} — ${p} HTG" and "Livraison à ${d}".`;
+ $('outputs').classList.remove('hidden'); window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+function copyText(id){navigator.clipboard?.writeText($(id).textContent);alert('Copié !')}
+</script>
+</body>
+</html>
